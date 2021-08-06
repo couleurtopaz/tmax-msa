@@ -10,14 +10,14 @@ spring:
         - id: first-service
           predicates:
             - Path=/first-service/**
-          uri: http://localhost:8081/
+          uri: lb://FIRST-SERVICE
           filters:
             - AddRequestHeader=first-request, dowon-lee
             - AddResponseHeader=first-response, Hi
         - id: second-service
           predicates:
             - Path=/second-service/**
-          uri: http://localhost:8082/
+          uri: lb://SECOND-SERVICE
           filters:
             - AddRequestHeader=second-header, kenneth
             - AddResponseHeader=second-response, Hello
