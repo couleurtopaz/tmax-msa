@@ -21,7 +21,10 @@ spring:
           filters:
             - AddRequestHeader=second-header, kenneth
             - AddResponseHeader=second-response, Hello
-
+        - id: user-service
+            predicates:
+              - Path=/user-service/**
+            uri: lb://USER-SERVICE
 eureka:
   client:
     register-with-eureka: true
