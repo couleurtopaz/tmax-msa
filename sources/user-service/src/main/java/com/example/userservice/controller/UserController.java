@@ -13,7 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -29,8 +33,8 @@ public class UserController {
     }
 
     @GetMapping("/health_check")
-    public String status() {
-        return "It's Working in User Service";
+    public String status(HttpServletRequest request) {
+        return String.format("It's Working in User Service on Port %s", request.getServerPort());
     }
 
     @GetMapping("/welcome")
@@ -49,5 +53,28 @@ public class UserController {
         ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
+    }
+
+    /* 전체 사용자 목록 */
+    @GetMapping("/users")
+    public List<ResponseUser> getUsers() {
+        Iterable<UserEntity> usersList = userService.getUserByAll();
+        List<ResponseUser> result = new ArrayList<>();
+
+        usersList.forEach(v -> {
+            result.add(new ModelMapper().map(v, ResponseUser.class));
+        });
+
+        return result;
+    }
+
+    /* 사용자 상세 보기 (with 주문 목록) */
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
+        UserDto userDto = userService.getUserByUserId(userId);
+
+        ResponseUser returnValue = new ModelMapper().map(userDto, ResponseUser.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 }
