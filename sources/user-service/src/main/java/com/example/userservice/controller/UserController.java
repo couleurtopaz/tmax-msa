@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class UserController {
 
     /* 전체 사용자 목록 */
     @GetMapping("/users")
-    public List<ResponseUser> getUsers() {
+    public List<ResponseUser> getUsers(HttpServletRequest request) {
         Iterable<UserEntity> usersList = userService.getUserByAll();
         List<ResponseUser> result = new ArrayList<>();
 
